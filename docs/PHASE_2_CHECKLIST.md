@@ -9,7 +9,7 @@
 - [x] Preserve one-time reward protection.
 - [x] Add a migration path from the verified mobile save.
 - [x] Add integrity and migration tests.
-- [ ] Obtain successful GitHub Actions verification.
+- [x] Obtain successful GitHub Actions verification.
 - [ ] Merge the foundation into `main`.
 
 ## Item 2: Typed domain records
