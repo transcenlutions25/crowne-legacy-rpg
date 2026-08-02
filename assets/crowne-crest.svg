@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Crowne Legacy crest</title>
+  <desc id="desc">A geometric gold and cobalt crown on an obsidian field.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="70%">
+      <stop offset="0" stop-color="#122b68"/>
+      <stop offset="0.55" stop-color="#080f24"/>
+      <stop offset="1" stop-color="#03050a"/>
+    </radialGradient>
+    <linearGradient id="metal" x1="0" x2="1">
+      <stop offset="0" stop-color="#b7862f"/>
+      <stop offset="0.5" stop-color="#ffe09a"/>
+      <stop offset="1" stop-color="#a46d1c"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M62 256 142 78l114 132L370 78l80 178-45 158H107Z" fill="none" stroke="#246dff" stroke-width="13" opacity=".5" filter="url(#glow)"/>
+  <path d="m92 240 69-126 95 105 95-105 69 126-35 137H127Z" fill="#070b14" stroke="url(#metal)" stroke-width="18" stroke-linejoin="round"/>
+  <path d="M126 286h260M145 342h222" stroke="#2d78ff" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="161" cy="114" r="14" fill="#ffe09a"/>
+  <circle cx="256" cy="219" r="14" fill="#ffe09a"/>
+  <circle cx="351" cy="114" r="14" fill="#ffe09a"/>
+</svg>
