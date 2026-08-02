@@ -1,4 +1,4 @@
-name: Import Verified Crowne Legacy Baseline
+name: Verify Crowne Legacy Asset Transfer
 
 on:
   push:
@@ -12,75 +12,37 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  import-verified-package:
+  verify-assets:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
-      - name: Checkout import branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/import-verified-baseline
-
-      - name: Download checksum-locked carrier
+      - name: Download candidate assets
         run: |
-          curl --fail --location --retry 3 \
-            'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-verified-carrier.png?v=1785694848' \
-            --output /tmp/crowne-verified-carrier.png
-          echo '452f8f8f110c0397223d69a9eb98cbbae99ba6b2bdb842b9990c04ec96ac4550  /tmp/crowne-verified-carrier.png' | sha256sum --check --strict
+          mkdir -p /tmp/crowne/assets /tmp/crowne/verification
+          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-icon-192.png?v=1785694760' -o /tmp/crowne/assets/icon-192.png
+          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-icon-512.png?v=1785694770' -o /tmp/crowne/assets/icon-512.png
+          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/tay-crownspire-relay-opening.webp?v=1785694779' -o /tmp/crowne/assets/tay-crownspire-relay-opening.webp
+          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/tay-nia-c9-records.webp?v=1785694789' -o /tmp/crowne/assets/tay-nia-c9-records.webp
+          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-verification-title-android.webp?v=1785694799' -o /tmp/crowne/verification/title-android.webp
+          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-verification-c9-android.webp?v=1785694811' -o /tmp/crowne/verification/c9-android.webp
+          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-verification-ending-android.webp?v=1785694821' -o /tmp/crowne/verification/ending-android.webp
 
-      - name: Extract verified ZIP payload
+      - name: Print downloaded asset hashes
+        run: sha256sum /tmp/crowne/assets/* /tmp/crowne/verification/*
+
+      - name: Verify exact package asset hashes
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          carrier = Path('/tmp/crowne-verified-carrier.png').read_bytes()
-          marker = b'\nCROWNE_ZIP_PAYLOAD_V1\n'
-          if marker not in carrier:
-              raise SystemExit('Verified package marker not found in carrier')
-          payload = carrier.split(marker, 1)[1]
-          Path('/tmp/Crowne-Legacy-Mobile-Verified.zip').write_bytes(payload)
-          PY
-          echo '7f33eb2c1ac721b438f2af43537d6f618b408a58c880840995d2ca64bde41e63  /tmp/Crowne-Legacy-Mobile-Verified.zip' | sha256sum --check --strict
-
-      - name: Import verified source and assets
-        run: |
-          unzip -o /tmp/Crowne-Legacy-Mobile-Verified.zip -d .
-          rm -rf .bootstrap
-          rm -f .github/workflows/import-verified-baseline.yml
-
-      - name: Record completed import
-        run: |
-          cat > IMPORT_STATUS.md <<'EOF'
-          # Crowne Legacy Mobile Import
-
-          The complete verified Crowne Legacy Mobile package was imported into the official repository from the checksum-locked archive.
-
-          Verified archive SHA-256: `7f33eb2c1ac721b438f2af43537d6f618b408a58c880840995d2ca64bde41e63`
-
-          Imported package inventory: 22 files totaling 1,033,267 bytes.
+          cd /tmp/crowne
+          cat > /tmp/asset-checksums.txt <<'EOF'
+          22cde2b3a8e374d9a8d39c2db6db0898f74d3728d111b09f3d298b8606da80fd  assets/icon-192.png
+          494dd06d77e05c7f67cad9e6f8df0b4293a81fc7e8f21b17b20fb285be7e551f  assets/icon-512.png
+          56862de6ba49c9b4c0fe6c443c2503f5c62c4adf0005d8701b5212e91df86bc2  assets/tay-crownspire-relay-opening.webp
+          d2876f224045191948b1d6c57fa933935a0767b8d826a2ed135a7d4516d1aee9  assets/tay-nia-c9-records.webp
+          9881fe3c6f06535cc53794568907daf817c01542cb1d232a681fb1d1f72ee5a1  verification/title-android.webp
+          58ea1cec39f012440d655c5b2d5a711da7d0f428d51f3da75bad3d58fdf78edf  verification/c9-android.webp
+          69542af5aae6009cf63b7c6a12f9401d0c6948e9d7ffc0c4c3c6901be2567dad  verification/ending-android.webp
           EOF
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/PHASE_1_CHECKLIST.md')
-          text = p.read_text()
-          text = text.replace('- [ ] Import every verified source file.', '- [x] Import every verified source file.')
-          text = text.replace('- [ ] Import every required production asset.', '- [x] Import every required production asset.')
-          text = text.replace('- [ ] Compare repository contents against the verified package.', '- [x] Compare repository contents against the verified package.')
-          p.write_text(text)
-          PY
-
-      - name: Validate imported baseline
-        run: |
-          npm install --ignore-scripts
-          npm run check
-          npm test
-
-      - name: Commit verified import
-        run: |
-          git config user.name 'Crowne Legacy Production Agent'
-          git config user.email 'actions@users.noreply.github.com'
-          git add -A
-          git commit -m 'Import complete verified mobile baseline'
-          git push origin HEAD:agent/import-verified-baseline
+          sha256sum --check /tmp/asset-checksums.txt
