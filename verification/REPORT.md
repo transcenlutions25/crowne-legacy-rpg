@@ -19,6 +19,21 @@ Verified on 2026-08-02 at an emulated Android viewport of 390 × 844 CSS pixels 
 - Every visible tap target is at least 44 × 44 CSS pixels.
 - Every rendered image has alt text, including intentionally empty alt text for decorative crests.
 
+## Repository Android viewport verification
+
+The merged repository build was independently verified through GitHub Actions on 2026-08-02 using headless Chromium with an Android 16 Pixel-class user agent at 412 × 915 CSS pixels and a 2.625× device scale factor.
+
+- Title, game hero, and story-decision views rendered successfully.
+- Document and body widths remained exactly 412 CSS pixels on all tested views.
+- The viewport metadata and installable web-app manifest were present.
+- Touch emulation was active and every visible button measured at least 40 × 40 CSS pixels; the smallest verified target measured 44 pixels high.
+- The C-9 scene artwork loaded with a nonzero natural width.
+- No console errors, uncaught page errors, or failed network requests occurred.
+- GitHub Actions run: `30761568159`.
+- Evidence artifact: `crowne-legacy-android-viewport`, artifact ID `8837620544`.
+- Artifact digest: `sha256:1c0f475d4f574c9f92c37692bbccb0d1704794e888ca84b6e1a178dda31ed397`.
+- Machine-readable results: `android-viewport-report.json`.
+
 ## Automated engine checks
 
 Seven Node tests pass for checkpoint fidelity, suggested-choice coverage, branch integrity, five persistent moral decisions, full-route completion, duplicate-payment protection, and additive canon policy.
@@ -28,3 +43,5 @@ Seven Node tests pass for checkpoint fidelity, suggested-choice coverage, branch
 - `title-android.webp`
 - `c9-android.webp`
 - `ending-android.webp`
+
+The repeatable Android workflow also generates title, game-top, and game-story screenshots as a GitHub Actions artifact on every verification run.
