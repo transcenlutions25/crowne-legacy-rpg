@@ -1,0 +1,1 @@
+Temporary package fragments used only for the controlled verified-baseline import. GitHub Actions removes this directory after reconstruction.
