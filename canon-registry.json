@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "franchise": "Crowne Legacy",
+  "roster_status": "partial_chapter_index",
+  "policy": {
+    "canon_is_user_owned": true,
+    "replacement_allowed": false,
+    "rename_allowed": false,
+    "identity_redesign_allowed": false,
+    "unverified_portraits_allowed": false,
+    "new_entries_are_additive_only": true
+  },
+  "note": "This file indexes only characters active or referenced in The Blackout Contract. It is not the complete Crowne Legacy roster.",
+  "chapter_entries": [
+    {
+      "id": "tay-crowne",
+      "name": "Tay Crowne",
+      "chapter_role": "playable lead and calm systems strategist",
+      "canon_status": "locked",
+      "portrait": "assets/tay-crownspire-relay-opening.webp"
+    },
+    {
+      "id": "dawn-crowne",
+      "name": "Dawn Crowne",
+      "chapter_role": "operations partner and remote contract strategist",
+      "canon_status": "locked",
+      "portrait": null
+    },
+    {
+      "id": "kai",
+      "name": "Kai",
+      "chapter_role": "referenced Crowne Legacy character",
+      "canon_status": "locked",
+      "portrait": null
+    },
+    {
+      "id": "nia-vale",
+      "name": "Nia Vale",
+      "chapter_role": "mission-specific supporting NPC and Crownspire Seven superintendent",
+      "canon_status": "chapter_support",
+      "portrait": null
+    }
+  ]
+}
