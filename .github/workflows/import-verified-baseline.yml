@@ -6,6 +6,9 @@ on:
       - agent/import-verified-baseline
     paths:
       - .github/workflows/import-verified-baseline.yml
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
