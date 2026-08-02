@@ -1,0 +1,44 @@
+name: Tag Crowne Legacy Mobile v0.1.0
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/PHASE_1_CHECKLIST.md
+      - .github/workflows/tag-v0.1.0.yml
+
+permissions:
+  contents: write
+
+jobs:
+  tag-stable-baseline:
+    name: Tag stable Phase 1 baseline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout verified main commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create immutable v0.1.0 tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --force --tags
+
+          if git rev-parse --verify "refs/tags/v0.1.0" >/dev/null 2>&1; then
+            existing_target="$(git rev-list -n 1 v0.1.0)"
+            if [ "$existing_target" = "$GITHUB_SHA" ]; then
+              echo "v0.1.0 already points to $GITHUB_SHA"
+              exit 0
+            fi
+
+            echo "Refusing to move existing v0.1.0 tag from $existing_target to $GITHUB_SHA"
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a v0.1.0 "$GITHUB_SHA" -m "Crowne Legacy Mobile v0.1.0 - verified Phase 1 Android baseline"
+          git push origin refs/tags/v0.1.0

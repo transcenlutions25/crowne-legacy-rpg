@@ -12,4 +12,4 @@
 - [x] Compare repository contents against the verified package.
 - [x] Obtain a successful GitHub Actions run.
 - [x] Verify the repository build at an Android viewport.
-- [ ] Tag the stable baseline as v0.1.0.
+- [x] Tag the stable baseline as v0.1.0.
