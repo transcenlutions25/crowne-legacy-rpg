@@ -7,9 +7,9 @@
 - [x] Add GitHub Actions verification.
 - [x] Document the phased production plan.
 - [x] Document cross-game principles.
-- [ ] Import every verified source file.
-- [ ] Import every required production asset.
-- [ ] Compare repository contents against the verified package.
-- [ ] Obtain a successful GitHub Actions run.
+- [x] Import every verified source file.
+- [x] Import every required production asset.
+- [x] Compare repository contents against the verified package.
+- [x] Obtain a successful GitHub Actions run.
 - [ ] Verify the repository build at an Android viewport.
 - [ ] Tag the stable baseline as v0.1.0.
