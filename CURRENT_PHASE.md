@@ -1,9 +1,5 @@
-# Current Production Phase
+# Current Phase
 
-**Phase 1: Stabilize the Mobile Vertical Slice**
+Phase 1 is active.
 
-Status: Active
-
-Production remains in Phase 1 until the complete verified source and asset package is present in GitHub, CI passes from a clean checkout, Android verification passes, and the baseline is tagged v0.1.0.
-
-Phase 2, the Crown Network shared backend, is defined but not yet active.
+The verified Crowne Legacy Mobile baseline is imported, byte-for-byte verified, and passing GitHub Actions. Remaining Phase 1 work is Android viewport verification and the stable `v0.1.0` baseline tag.
