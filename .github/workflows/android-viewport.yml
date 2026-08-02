@@ -1,0 +1,76 @@
+name: Android Viewport Verification
+
+on:
+  push:
+    branches:
+      - agent/android-viewport-verification
+      - main
+    paths:
+      - ".github/workflows/android-viewport.yml"
+      - "tests/android-viewport.mjs"
+      - "app.js"
+      - "game-engine.js"
+      - "story.js"
+      - "index.html"
+      - "styles.css"
+      - "server.mjs"
+      - "assets/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-android-viewport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Start Crowne Legacy server
+        run: |
+          node server.mjs --port 4173 > /tmp/crowne-server.log 2>&1 &
+          echo $! > /tmp/crowne-server.pid
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/crowne-server.log
+          exit 1
+
+      - name: Verify Android viewport
+        run: node tests/android-viewport.mjs
+
+      - name: Upload Android verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crowne-legacy-android-viewport
+          path: artifacts/android-viewport
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Stop Crowne Legacy server
+        if: always()
+        run: |
+          if [ -f /tmp/crowne-server.pid ]; then
+            kill "$(cat /tmp/crowne-server.pid)" || true
+          fi
+          cat /tmp/crowne-server.log || true
