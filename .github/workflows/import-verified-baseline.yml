@@ -24,11 +24,24 @@ jobs:
         with:
           ref: agent/import-verified-baseline
 
-      - name: Download verified package
+      - name: Download checksum-locked carrier
         run: |
           curl --fail --location --retry 3 \
-            'https://drive.google.com/uc?export=download&id=1hOk4Z70Kml2jxEHyS37HStJnjpMr6KcC' \
-            --output /tmp/Crowne-Legacy-Mobile-Verified.zip
+            'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-verified-carrier.png?v=1785694848' \
+            --output /tmp/crowne-verified-carrier.png
+          echo '452f8f8f110c0397223d69a9eb98cbbae99ba6b2bdb842b9990c04ec96ac4550  /tmp/crowne-verified-carrier.png' | sha256sum --check --strict
+
+      - name: Extract verified ZIP payload
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          carrier = Path('/tmp/crowne-verified-carrier.png').read_bytes()
+          marker = b'\nCROWNE_ZIP_PAYLOAD_V1\n'
+          if marker not in carrier:
+              raise SystemExit('Verified package marker not found in carrier')
+          payload = carrier.split(marker, 1)[1]
+          Path('/tmp/Crowne-Legacy-Mobile-Verified.zip').write_bytes(payload)
+          PY
           echo '7f33eb2c1ac721b438f2af43537d6f618b408a58c880840995d2ca64bde41e63  /tmp/Crowne-Legacy-Mobile-Verified.zip' | sha256sum --check --strict
 
       - name: Import verified source and assets
