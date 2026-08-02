@@ -10,6 +10,6 @@
 - [x] Import every verified source file.
 - [x] Import every required production asset.
 - [x] Compare repository contents against the verified package.
-- [ ] Obtain a successful GitHub Actions run.
+- [x] Obtain a successful GitHub Actions run.
 - [ ] Verify the repository build at an Android viewport.
 - [ ] Tag the stable baseline as v0.1.0.
