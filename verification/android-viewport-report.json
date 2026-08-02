@@ -1,0 +1,82 @@
+{
+  "checkedAt": "2026-08-02T18:38:48.893Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "viewport": {
+    "width": 412,
+    "height": 915
+  },
+  "userAgent": "Mozilla/5.0 (Linux; Android 16; Pixel 9 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36",
+  "screens": {
+    "title": {
+      "viewportWidth": 412,
+      "viewportHeight": 915,
+      "documentWidth": 412,
+      "bodyWidth": 412,
+      "title": "Crowne Legacy: The Blackout Contract",
+      "hasViewportMeta": true,
+      "hasManifest": true,
+      "maxTouchPoints": 1,
+      "visibleButtons": [
+        { "label": "Open settings", "width": 46, "height": 46 },
+        { "label": "Continue as Tay at C-9›", "width": 368, "height": 64 },
+        { "label": "Replay the Full Contract", "width": 368, "height": 56 }
+      ]
+    },
+    "gameTop": {
+      "viewportWidth": 412,
+      "viewportHeight": 915,
+      "documentWidth": 412,
+      "bodyWidth": 412,
+      "title": "Crowne Legacy: The Blackout Contract",
+      "hasViewportMeta": true,
+      "hasManifest": true,
+      "maxTouchPoints": 1,
+      "visibleButtons": [
+        { "label": "Return to title", "width": 120, "height": 44 },
+        { "label": "Open wallet and ledger", "width": 78, "height": 46 },
+        { "label": "Open settings", "width": 46, "height": 46 },
+        { "label": "Lock Suggested ›", "width": 334, "height": 60 },
+        { "label": "Choose Coordinate the C-9 isolation with Nia", "width": 374, "height": 161 },
+        { "label": "Choose Attempt a solo hot-swap", "width": 374, "height": 145 },
+        { "label": "Choose Call a witnessed public shutdown", "width": 374, "height": 161 },
+        { "label": "⌑Evidence6", "width": 98, "height": 53 },
+        { "label": "▤Ledger1", "width": 98, "height": 53 },
+        { "label": "◈Chapter Cast", "width": 98, "height": 53 },
+        { "label": "⌁Settings", "width": 98, "height": 53 }
+      ]
+    },
+    "gameStory": {
+      "viewportWidth": 412,
+      "viewportHeight": 915,
+      "documentWidth": 412,
+      "bodyWidth": 412,
+      "title": "Crowne Legacy: The Blackout Contract",
+      "hasViewportMeta": true,
+      "hasManifest": true,
+      "maxTouchPoints": 1,
+      "visibleButtons": [
+        { "label": "Return to title", "width": 120, "height": 44 },
+        { "label": "Open wallet and ledger", "width": 78, "height": 46 },
+        { "label": "Open settings", "width": 46, "height": 46 },
+        { "label": "Lock Suggested ›", "width": 334, "height": 60 },
+        { "label": "Choose Coordinate the C-9 isolation with Nia", "width": 374, "height": 161 },
+        { "label": "Choose Attempt a solo hot-swap", "width": 374, "height": 145 },
+        { "label": "Choose Call a witnessed public shutdown", "width": 374, "height": 161 },
+        { "label": "⌑Evidence6", "width": 98, "height": 53 },
+        { "label": "▤Ledger1", "width": 98, "height": 53 },
+        { "label": "◈Chapter Cast", "width": 98, "height": 53 },
+        { "label": "⌁Settings", "width": 98, "height": 53 }
+      ]
+    }
+  },
+  "status": "passed",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": [],
+  "githubActions": {
+    "runId": 30761568159,
+    "artifactId": 8837620544,
+    "artifactName": "crowne-legacy-android-viewport",
+    "artifactDigest": "sha256:1c0f475d4f574c9f92c37692bbccb0d1704794e888ca84b6e1a178dda31ed397"
+  }
+}
