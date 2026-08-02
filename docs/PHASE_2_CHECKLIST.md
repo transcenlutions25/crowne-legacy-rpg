@@ -10,7 +10,7 @@
 - [x] Add a migration path from the verified mobile save.
 - [x] Add integrity and migration tests.
 - [x] Obtain successful GitHub Actions verification.
-- [ ] Merge the foundation into `main`.
+- [x] Merge the foundation into `main`.
 
 ## Item 2: Typed domain records
 
