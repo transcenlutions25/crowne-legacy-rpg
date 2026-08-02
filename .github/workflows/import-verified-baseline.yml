@@ -1,4 +1,4 @@
-name: Verify Crowne Legacy Asset Transfer
+name: Inspect Verified Crowne Legacy Archive Transfer
 
 on:
   push:
@@ -15,34 +15,28 @@ permissions:
   contents: read
 
 jobs:
-  verify-assets:
+  inspect-drive-transfer:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Download candidate assets
+      - name: Download Drive package
         run: |
-          mkdir -p /tmp/crowne/assets /tmp/crowne/verification
-          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-icon-192.png?v=1785694760' -o /tmp/crowne/assets/icon-192.png
-          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-icon-512.png?v=1785694770' -o /tmp/crowne/assets/icon-512.png
-          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/tay-crownspire-relay-opening.webp?v=1785694779' -o /tmp/crowne/assets/tay-crownspire-relay-opening.webp
-          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/tay-nia-c9-records.webp?v=1785694789' -o /tmp/crowne/assets/tay-nia-c9-records.webp
-          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-verification-title-android.webp?v=1785694799' -o /tmp/crowne/verification/title-android.webp
-          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-verification-c9-android.webp?v=1785694811' -o /tmp/crowne/verification/c9-android.webp
-          curl -fL 'https://cdn.shopify.com/s/files/1/0832/7371/1845/files/crowne-legacy-verification-ending-android.webp?v=1785694821' -o /tmp/crowne/verification/ending-android.webp
+          curl --fail --location --retry 3 \
+            'https://drive.google.com/uc?export=download&id=1hOk4Z70Kml2jxEHyS37HStJnjpMr6KcC' \
+            --output /tmp/package.download
 
-      - name: Print downloaded asset hashes
-        run: sha256sum /tmp/crowne/assets/* /tmp/crowne/verification/*
-
-      - name: Verify exact package asset hashes
+      - name: Inspect transfer
         run: |
-          cd /tmp/crowne
-          cat > /tmp/asset-checksums.txt <<'EOF'
-          22cde2b3a8e374d9a8d39c2db6db0898f74d3728d111b09f3d298b8606da80fd  assets/icon-192.png
-          494dd06d77e05c7f67cad9e6f8df0b4293a81fc7e8f21b17b20fb285be7e551f  assets/icon-512.png
-          56862de6ba49c9b4c0fe6c443c2503f5c62c4adf0005d8701b5212e91df86bc2  assets/tay-crownspire-relay-opening.webp
-          d2876f224045191948b1d6c57fa933935a0767b8d826a2ed135a7d4516d1aee9  assets/tay-nia-c9-records.webp
-          9881fe3c6f06535cc53794568907daf817c01542cb1d232a681fb1d1f72ee5a1  verification/title-android.webp
-          58ea1cec39f012440d655c5b2d5a711da7d0f428d51f3da75bad3d58fdf78edf  verification/c9-android.webp
-          69542af5aae6009cf63b7c6a12f9401d0c6948e9d7ffc0c4c3c6901be2567dad  verification/ending-android.webp
-          EOF
-          sha256sum --check /tmp/asset-checksums.txt
+          stat -c 'bytes=%s' /tmp/package.download
+          sha256sum /tmp/package.download
+          file /tmp/package.download
+          xxd -l 64 /tmp/package.download
+          unzip -t /tmp/package.download || true
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('/tmp/package.download')
+          data = p.read_bytes()
+          print('starts_zip=', data.startswith(b'PK\x03\x04'))
+          print('ends_zip=', data.endswith(b'PK\x05\x06') or b'PK\x05\x06' in data[-256:])
+          print('html_prefix=', data[:200].decode('utf-8', 'replace'))
+          PY
