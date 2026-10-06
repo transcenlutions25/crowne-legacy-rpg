@@ -14,26 +14,26 @@
 
 ## Item 2: Typed domain records
 
-- [ ] Define properties and businesses.
-- [ ] Define inventory and vehicles.
-- [ ] Define missions and consequence chains.
-- [ ] Define relationships and factions.
-- [ ] Define reputation, political heat, and world clocks.
-- [ ] Define scheduled world events.
+- [x] Define properties and businesses.
+- [x] Define inventory and vehicles.
+- [x] Define missions and consequence chains.
+- [x] Define relationships and factions.
+- [x] Define reputation, political heat, and world clocks.
+- [x] Define scheduled world events.
 
 ## Item 3: Cross-game command protocol
 
-- [ ] Define command envelopes from mobile and main-game clients.
-- [ ] Define accepted, rejected, duplicate, and conflict responses.
-- [ ] Define authority rules for economy and irreversible decisions.
-- [ ] Define replay-safe receipts and audit metadata.
+- [x] Define command envelopes from mobile and main-game clients.
+- [x] Define accepted, rejected, duplicate, and conflict responses.
+- [x] Define authority rules for economy and irreversible decisions.
+- [x] Define replay-safe receipts and audit metadata.
 
 ## Item 4: Contract fixtures and compatibility
 
-- [ ] Add canonical example snapshots.
-- [ ] Add mobile-to-network round-trip fixtures.
-- [ ] Add future main-game client fixtures.
-- [ ] Add compatibility and tamper-detection tests.
+- [x] Add canonical example snapshots.
+- [x] Add mobile-to-network round-trip fixtures.
+- [x] Add future main-game client fixtures.
+- [x] Add compatibility and tamper-detection tests.
 
 ## Phase 2 exit criteria
 
@@ -41,3 +41,5 @@
 - [ ] Both client types can express changes without owning authoritative state.
 - [ ] Ledger, reward, canon, and consequence protections are automatically tested.
 - [ ] Contract documentation and fixtures are sufficient to build the Phase 3 backend.
+
+Items 2–4 are implemented as reference contracts and fixtures in this change. Phase exit remains pending review and exact-commit CI; this is not a backend deployment. See [the first Android release gates](FIRST_PLAYABLE_RELEASE.md).
