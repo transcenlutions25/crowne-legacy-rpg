@@ -1,3 +1,5 @@
+import { isRecord, isText, isInteger, isTimestamp, validateDomainRecords } from "./crown-domain.js";
+
 export const CROWN_NETWORK_VERSION = 1;
 export const CROWN_CURRENCY = "CROWN";
 
@@ -43,7 +45,7 @@ function requireText(value, label) {
 }
 
 function requireInteger(value, label) {
-  const number = Number(value);
+  const number = value;
   if (!Number.isSafeInteger(number)) throw new Error(`${label} must be a safe integer.`);
   return number;
 }
@@ -156,9 +158,9 @@ export function createCrownNetworkSnapshot({
 function duplicateValues(records, selector) {
   const seen = new Set();
   const duplicates = new Set();
-  for (const record of records) {
+  for (const record of Array.isArray(records) ? records : []) {
     const value = selector(record);
-    if (!value) continue;
+    if (!isText(value)) continue;
     if (seen.has(value)) duplicates.add(value);
     seen.add(value);
   }
@@ -167,7 +169,7 @@ function duplicateValues(records, selector) {
 
 export function validateCrownNetworkSnapshot(candidate) {
   const errors = [];
-  if (!candidate || typeof candidate !== "object") return { valid: false, errors: ["Snapshot must be an object."] };
+  if (!isRecord(candidate)) return { valid: false, errors: ["Snapshot must be an object."] };
   if (candidate.version !== CROWN_NETWORK_VERSION) errors.push(`Snapshot version must be ${CROWN_NETWORK_VERSION}.`);
 
   for (const key of CROWN_NETWORK_RECORDS) {
@@ -177,7 +179,7 @@ export function validateCrownNetworkSnapshot(candidate) {
   if (!candidate.player?.id) errors.push("Player identity is missing an ID.");
   if (!Array.isArray(candidate.characters) || candidate.characters.length === 0) {
     errors.push("At least one character is required.");
-  } else if (!candidate.characters.some((character) => character.id === candidate.player?.activeCharacterId)) {
+  } else if (!candidate.characters.some((character) => character?.id === candidate.player?.activeCharacterId)) {
     errors.push("The active character must exist in the character collection.");
   }
 
@@ -186,8 +188,8 @@ export function validateCrownNetworkSnapshot(candidate) {
     if (!Array.isArray(candidate[key])) errors.push(`${key} must be an array.`);
   }
 
-  const balance = Number(candidate.wallet?.balance);
-  const totalEarned = Number(candidate.wallet?.totalEarned);
+  const balance = candidate.wallet?.balance;
+  const totalEarned = candidate.wallet?.totalEarned;
   if (!Number.isSafeInteger(balance) || balance < 0) errors.push("Wallet balance must be a nonnegative safe integer.");
   if (!Number.isSafeInteger(totalEarned) || totalEarned < 0) errors.push("Wallet totalEarned must be a nonnegative safe integer.");
 
@@ -199,17 +201,18 @@ export function validateCrownNetworkSnapshot(candidate) {
   if (receiptDuplicates.length) errors.push(`Duplicate action receipts: ${receiptDuplicates.join(", ")}.`);
 
   let runningBalance = 0;
-  for (const entry of candidate.ledger || []) {
-    if (!entry?.id || !entry?.idempotencyKey) {
+  for (const entry of Array.isArray(candidate.ledger) ? candidate.ledger : []) {
+    if (!isText(entry?.id) || !isText(entry?.idempotencyKey)) {
       errors.push("Every ledger entry requires an ID and idempotency key.");
       continue;
     }
-    const amount = Number(entry.amount);
+    const amount = entry.amount;
     if (!Number.isSafeInteger(amount)) {
       errors.push(`Ledger amount for ${entry.id} must be a safe integer.`);
       continue;
     }
     runningBalance += amount;
+    if (!Number.isSafeInteger(runningBalance)) errors.push("Ledger balance exceeds safe integer range.");
     if (entry.balanceAfter !== runningBalance) errors.push(`Ledger balance chain is invalid at ${entry.id}.`);
     if (runningBalance < 0) errors.push(`Ledger balance became negative at ${entry.id}.`);
   }
@@ -217,15 +220,51 @@ export function validateCrownNetworkSnapshot(candidate) {
     errors.push(`Ledger total ${runningBalance} does not match wallet balance ${balance}.`);
   }
 
-  const ledgerIds = new Set((candidate.ledger || []).map((entry) => entry?.id));
-  for (const receipt of candidate.actionReceipts || []) {
-    if (!receipt?.id || !receipt?.idempotencyKey || !receipt?.sourceClient) {
+  const ledgerIds = new Set((Array.isArray(candidate.ledger) ? candidate.ledger : []).map((entry) => entry?.id));
+  for (const receipt of Array.isArray(candidate.actionReceipts) ? candidate.actionReceipts : []) {
+    if (!isText(receipt?.id) || !isText(receipt?.idempotencyKey) || !isText(receipt?.sourceClient)) {
       errors.push("Every action receipt requires an ID, idempotency key, and source client.");
     }
     if (receipt?.ledgerEntryId && !ledgerIds.has(receipt.ledgerEntryId)) {
-      errors.push(`Receipt ${receipt.id} references a missing ledger entry.`);
+      errors.push("Receipt references a missing ledger entry.");
     }
   }
+
+  for (const field of ["id", "createdAt", "updatedAt"]) {
+    if (!(field === "id" ? isText(candidate[field]) : isTimestamp(candidate[field]))) errors.push(`Snapshot ${field} is invalid.`);
+  }
+  if ("revision" in candidate && (!isInteger(candidate.revision) || candidate.revision < 0)) errors.push("Snapshot revision is invalid.");
+  for (const [key, fields] of [["player", ["id", "displayName", "activeCharacterId"]], ["wallet", ["id", "currency"]]]) {
+    if (!isRecord(candidate[key])) errors.push(`${key} must be an object.`);
+    for (const field of fields) if (!isText(candidate[key]?.[field])) errors.push(`${key}.${field} is invalid.`);
+    if (!isTimestamp(candidate[key]?.updatedAt)) errors.push(`${key}.updatedAt is invalid.`);
+  }
+  if (isInteger(balance) && isInteger(totalEarned) && totalEarned < balance) errors.push("Wallet totalEarned cannot be below its balance.");
+  if (candidate.wallet?.currency !== CROWN_CURRENCY) errors.push("Wallet currency must be CROWN.");
+  if (!isTimestamp(candidate.player?.createdAt)) errors.push("player.createdAt is invalid.");
+  for (const character of Array.isArray(candidate.characters) ? candidate.characters : []) {
+    if (!isRecord(character)) { errors.push("Character must be an object."); continue; }
+    for (const field of ["id", "name", "campaign"]) if (!isText(character[field])) errors.push(`Character ${field} is invalid.`);
+    if (!isInteger(character.level) || character.level < 1 || !isInteger(character.xp) || character.xp < 0 || !isRecord(character.state) || !isTimestamp(character.updatedAt)) errors.push("Character progression or state is invalid.");
+  }
+  for (const key of collectionKeys) {
+    const duplicates = duplicateValues(candidate[key], record => record?.id || (key === "consequences" ? record?.choiceId : null));
+    if (duplicates.length) errors.push(`Duplicate ${key} IDs: ${duplicates.join(", ")}.`);
+  }
+  if (duplicateValues(candidate.ledger, record => record?.idempotencyKey).length) errors.push("Duplicate ledger idempotency keys.");
+  for (const entry of Array.isArray(candidate.ledger) ? candidate.ledger : []) {
+    if (!isRecord(entry)) continue;
+    if (!["id", "idempotencyKey", "type", "description", "sourceClient"].every(key => isText(entry[key])) || !isTimestamp(entry.occurredAt) || !isRecord(entry.metadata)) errors.push("Ledger audit fields are invalid.");
+    const receipts = Array.isArray(candidate.actionReceipts) ? candidate.actionReceipts.filter(r => r?.ledgerEntryId === entry.id) : [];
+    if (receipts.length !== 1 || receipts[0]?.idempotencyKey !== entry.idempotencyKey || receipts[0]?.sourceClient !== entry.sourceClient) errors.push("Ledger entry must have exactly one matching receipt.");
+  }
+  for (const receipt of Array.isArray(candidate.actionReceipts) ? candidate.actionReceipts : []) {
+    if (!isRecord(receipt)) continue;
+    if (!isTimestamp(receipt.occurredAt) || !["applied", "accepted", "rejected", "conflict"].includes(receipt.status)) errors.push("Receipt audit fields are invalid.");
+    if (receipt.status === "applied" && !receipt.ledgerEntryId) errors.push("Applied receipt requires a ledger entry.");
+    if ("commandId" in receipt && (!isText(receipt.commandId) || !isText(receipt.requestFingerprint) || !isInteger(receipt.revision) || receipt.revision < 1 || receipt.revision > (candidate.revision ?? 0) || !isText(receipt.reason))) errors.push("Command receipt audit fields are invalid.");
+  }
+  validateDomainRecords(candidate, errors);
 
   return { valid: errors.length === 0, errors };
 }
@@ -248,9 +287,13 @@ export function applyLedgerTransaction(inputSnapshot, {
   if (signedAmount === 0) throw new Error("Transaction amount cannot be zero.");
 
   const existing = snapshot.actionReceipts.find((receipt) => receipt.idempotencyKey === key);
-  if (existing) return { snapshot, receipt: existing, applied: false, reason: "duplicate" };
+  if (existing) {
+    const prior = snapshot.ledger.find(entry => entry.id === existing.ledgerEntryId);
+    return { snapshot, receipt: existing, applied: false, reason: prior && prior.amount === signedAmount && prior.type === type && prior.sourceClient === sourceClient ? "duplicate" : "conflict" };
+  }
 
   const nextBalance = snapshot.wallet.balance + signedAmount;
+  if (!Number.isSafeInteger(nextBalance) || !Number.isSafeInteger(snapshot.wallet.totalEarned + Math.max(0, signedAmount))) throw new Error("Transaction exceeds safe integer range.");
   if (nextBalance < 0) return { snapshot, receipt: null, applied: false, reason: "insufficient-funds" };
 
   const at = timestamp(occurredAt);
@@ -291,7 +334,7 @@ export function migrateLegacyGameState(legacyState, {
   displayName = "Local Player",
   sourceClient = "crowne-legacy-mobile"
 } = {}) {
-  if (!legacyState || typeof legacyState !== "object") throw new Error("A legacy game state is required.");
+  if (!isRecord(legacyState) || legacyState.version !== 3) throw new Error("A legacy game state is required.");
 
   const characterId = String(legacyState.activeCharacter || "Tay Crowne")
     .toLowerCase()
@@ -315,6 +358,7 @@ export function migrateLegacyGameState(legacyState, {
     xp: legacyState.stats?.xp || 0,
     state: {
       legacyStateVersion: legacyState.version ?? null,
+      legacySave: clone(legacyState),
       mode: legacyState.mode ?? null,
       sceneId: legacyState.sceneId ?? null,
       stage: legacyState.stage ?? null,
@@ -371,4 +415,13 @@ export function migrateLegacyGameState(legacyState, {
     createdAt: legacyState.startedAt || migratedAt,
     updatedAt: migratedAt
   });
+}
+
+// Recovery of the original v3 save, not a network-to-client synchronization API.
+export function restoreLegacyGameState(snapshot) {
+  const validation = validateCrownNetworkSnapshot(snapshot);
+  if (!validation.valid) throw new Error(`Invalid snapshot: ${validation.errors.join(" ")}`);
+  const archive = snapshot.characters.find(character => character.id === snapshot.player.activeCharacterId)?.state?.legacySave;
+  if (!isRecord(archive) || archive.version !== 3) throw new Error("This snapshot has no complete version-3 mobile save archive.");
+  return clone(archive);
 }

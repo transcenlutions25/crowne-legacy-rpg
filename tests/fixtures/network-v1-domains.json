@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "id": "fixture-snapshot",
+  "player": {
+    "id": "local-player",
+    "displayName": "Local Player",
+    "activeCharacterId": "tay-crowne",
+    "createdAt": "2026-08-01T12:00:00.000Z",
+    "updatedAt": "2026-08-01T12:00:00.000Z"
+  },
+  "characters": [
+    {
+      "id": "tay-crowne",
+      "name": "Tay Crowne",
+      "campaign": "Crowne Legacy: The Blackout Contract",
+      "level": 1,
+      "xp": 50,
+      "state": {
+        "legacyStateVersion": 3,
+        "legacySave": {
+          "version": 3,
+          "campaign": "Crowne Legacy: The Blackout Contract",
+          "mode": "checkpoint",
+          "activeCharacter": "Tay Crowne",
+          "rosterScope": "chapter-subset",
+          "sceneId": "c9",
+          "stage": "worksite",
+          "stats": {
+            "level": 1,
+            "hp": 8,
+            "maxHp": 10,
+            "ac": 14,
+            "xp": 50,
+            "nextLevelXp": 300,
+            "wallet": 0,
+            "pendingReward": 50,
+            "totalEarned": 0,
+            "reserve": 9,
+            "inspector": 16
+          },
+          "funds": {
+            "operations": 0,
+            "residents": 0
+          },
+          "evidence": [
+            "cobalt-pulse",
+            "outbound-handshake",
+            "c9-map",
+            "duplicated-credential",
+            "early-notice",
+            "bridge-loan"
+          ],
+          "flags": {
+            "contractAccepted": true,
+            "cleanTerms": true,
+            "relayMapped": true,
+            "evidenceSuite": true,
+            "exportLogged": true
+          },
+          "world": {
+            "communityTrust": 0,
+            "marketTrust": 0,
+            "niaTrust": 0,
+            "civicTrust": 0,
+            "evidenceStrength": 0,
+            "politicalHeat": 0,
+            "autonomy": 0,
+            "residentSafety": 0,
+            "integrity": 0
+          },
+          "legacyDecisions": [],
+          "paymentClaimed": false,
+          "fundsAllocated": false,
+          "history": [],
+          "ledger": [
+            {
+              "at": "2026-08-01T12:00:00.000Z",
+              "type": "campaign",
+              "text": "Questforge checkpoint loaded at expansion port C-9."
+            }
+          ],
+          "startedAt": "2026-08-01T12:00:00.000Z",
+          "updatedAt": "2026-08-01T12:00:00.000Z",
+          "completedAt": null
+        },
+        "mode": "checkpoint",
+        "sceneId": "c9",
+        "stage": "worksite",
+        "hp": 8,
+        "maxHp": 10,
+        "funds": {
+          "operations": 0,
+          "residents": 0
+        },
+        "evidence": [
+          "cobalt-pulse",
+          "outbound-handshake",
+          "c9-map",
+          "duplicated-credential",
+          "early-notice",
+          "bridge-loan"
+        ],
+        "flags": {
+          "contractAccepted": true,
+          "cleanTerms": true,
+          "relayMapped": true,
+          "evidenceSuite": true,
+          "exportLogged": true
+        },
+        "world": {
+          "communityTrust": 0,
+          "marketTrust": 0,
+          "niaTrust": 0,
+          "civicTrust": 0,
+          "evidenceStrength": 0,
+          "politicalHeat": 0,
+          "autonomy": 0,
+          "residentSafety": 0,
+          "integrity": 0
+        },
+        "legacyDecisions": [],
+        "missionHistory": [],
+        "narrativeLedger": [
+          {
+            "at": "2026-08-01T12:00:00.000Z",
+            "type": "campaign",
+            "text": "Questforge checkpoint loaded at expansion port C-9."
+          }
+        ],
+        "completedAt": null
+      },
+      "updatedAt": "2026-08-01T12:00:00.000Z"
+    }
+  ],
+  "wallet": {
+    "id": "primary-wallet",
+    "currency": "CROWN",
+    "balance": 0,
+    "totalEarned": 0,
+    "updatedAt": "2026-08-01T12:00:00.000Z"
+  },
+  "ledger": [],
+  "properties": [
+    {
+      "id": "fixture-property",
+      "ownerCharacterId": "tay-crowne",
+      "name": "Contract test property",
+      "status": "owned"
+    }
+  ],
+  "businesses": [
+    {
+      "id": "fixture-business",
+      "propertyId": "fixture-property",
+      "ownerCharacterId": "tay-crowne",
+      "name": "Contract test business",
+      "status": "active"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "fixture-inventory",
+      "ownerCharacterId": "tay-crowne",
+      "itemId": "fixture-item",
+      "quantity": 1
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "fixture-vehicle",
+      "ownerCharacterId": "tay-crowne",
+      "modelId": "fixture-model",
+      "status": "available"
+    }
+  ],
+  "missions": [
+    {
+      "id": "blackout-contract",
+      "campaign": "Crowne Legacy: The Blackout Contract",
+      "sceneId": "c9",
+      "stage": "worksite",
+      "status": "active",
+      "updatedAt": "2026-08-01T12:00:00.000Z"
+    }
+  ],
+  "consequences": [],
+  "relationships": [
+    {
+      "id": "fixture-relationship",
+      "fromCharacterId": "tay-crowne",
+      "toCharacterId": "tay-crowne",
+      "value": 0
+    }
+  ],
+  "factions": [
+    {
+      "id": "fixture-faction",
+      "name": "Contract test faction",
+      "reputation": 0
+    }
+  ],
+  "reputation": {
+    "communityTrust": 0,
+    "marketTrust": 0,
+    "niaTrust": 0,
+    "civicTrust": 0,
+    "evidenceStrength": 0,
+    "politicalHeat": 0,
+    "autonomy": 0,
+    "residentSafety": 0,
+    "integrity": 0
+  },
+  "worldClocks": [
+    {
+      "id": "fixture-clock",
+      "value": 0,
+      "limit": 4,
+      "updatedAt": "2026-08-01T12:00:00.000Z"
+    }
+  ],
+  "scheduledEvents": [
+    {
+      "id": "fixture-event",
+      "clockId": "fixture-clock",
+      "dueAt": "2026-08-01T12:00:00.000Z",
+      "status": "scheduled",
+      "consequenceIds": []
+    }
+  ],
+  "actionReceipts": [],
+  "createdAt": "2026-08-01T12:00:00.000Z",
+  "updatedAt": "2026-08-01T12:00:00.000Z"
+}

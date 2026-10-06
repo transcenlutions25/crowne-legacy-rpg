@@ -35,3 +35,7 @@ For a true Android installation with offline service-worker support, place this 
 ## Scope
 
 This package is a polished playable vertical slice. A full commercial AAA mobile release still requires the complete canon character bible, production character and environment art, animation, voice, a native runtime or store wrapper, backend and cloud saves, device-lab QA, security review, content expansion, localization, ratings, and store certification. See `AAA_ROADMAP.md` for the production path.
+
+## Next release gates
+
+See [the first sellable Android chapter plan](docs/FIRST_PLAYABLE_RELEASE.md) for the bounded review, canon, device, recovery and commercial-readiness gates. The Crown Network contract remains separate from the running offline chapter.

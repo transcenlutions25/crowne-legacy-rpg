@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "id": "fixture-original-v1",
+  "player": {
+    "id": "local-player",
+    "displayName": "Local Player",
+    "activeCharacterId": "tay-crowne",
+    "createdAt": "2026-08-01T12:00:00.000Z",
+    "updatedAt": "2026-08-01T12:00:00.000Z"
+  },
+  "characters": [
+    {
+      "id": "tay-crowne",
+      "name": "Tay Crowne",
+      "campaign": "Crowne Legacy: The Blackout Contract",
+      "level": 1,
+      "xp": 50,
+      "state": {
+        "legacyStateVersion": 3,
+        "mode": "checkpoint",
+        "sceneId": "c9",
+        "stage": "worksite",
+        "hp": 8,
+        "maxHp": 10,
+        "funds": {
+          "operations": 0,
+          "residents": 0
+        },
+        "evidence": [
+          "cobalt-pulse",
+          "outbound-handshake",
+          "c9-map",
+          "duplicated-credential",
+          "early-notice",
+          "bridge-loan"
+        ],
+        "flags": {
+          "contractAccepted": true,
+          "cleanTerms": true,
+          "relayMapped": true,
+          "evidenceSuite": true,
+          "exportLogged": true
+        },
+        "world": {
+          "communityTrust": 0,
+          "marketTrust": 0,
+          "niaTrust": 0,
+          "civicTrust": 0,
+          "evidenceStrength": 0,
+          "politicalHeat": 0,
+          "autonomy": 0,
+          "residentSafety": 0,
+          "integrity": 0
+        },
+        "legacyDecisions": [],
+        "missionHistory": [],
+        "narrativeLedger": [
+          {
+            "at": "2026-08-01T12:00:00.000Z",
+            "type": "campaign",
+            "text": "Questforge checkpoint loaded at expansion port C-9."
+          }
+        ],
+        "completedAt": null
+      },
+      "updatedAt": "2026-08-01T12:00:00.000Z"
+    }
+  ],
+  "wallet": {
+    "id": "primary-wallet",
+    "currency": "CROWN",
+    "balance": 50,
+    "totalEarned": 50,
+    "updatedAt": "2026-08-01T12:00:00.000Z"
+  },
+  "ledger": [
+    {
+      "id": "fixture-legacy-payment",
+      "idempotencyKey": "mission:blackout-contract:payment",
+      "type": "mission-payment",
+      "description": "Blackout Contract payment",
+      "amount": 50,
+      "balanceAfter": 50,
+      "sourceClient": "crowne-legacy-mobile",
+      "metadata": {},
+      "occurredAt": "2026-08-01T12:00:00.000Z"
+    }
+  ],
+  "properties": [],
+  "businesses": [],
+  "inventory": [],
+  "vehicles": [],
+  "missions": [
+    {
+      "id": "blackout-contract",
+      "campaign": "Crowne Legacy: The Blackout Contract",
+      "sceneId": "c9",
+      "stage": "worksite",
+      "status": "active",
+      "updatedAt": "2026-08-01T12:00:00.000Z"
+    }
+  ],
+  "consequences": [],
+  "relationships": [],
+  "factions": [],
+  "reputation": {
+    "communityTrust": 0,
+    "marketTrust": 0,
+    "niaTrust": 0,
+    "civicTrust": 0,
+    "evidenceStrength": 0,
+    "politicalHeat": 0,
+    "autonomy": 0,
+    "residentSafety": 0,
+    "integrity": 0
+  },
+  "worldClocks": [],
+  "scheduledEvents": [],
+  "actionReceipts": [
+    {
+      "id": "fixture-legacy-receipt",
+      "idempotencyKey": "mission:blackout-contract:payment",
+      "sourceClient": "crowne-legacy-mobile",
+      "status": "applied",
+      "ledgerEntryId": "fixture-legacy-payment",
+      "occurredAt": "2026-08-01T12:00:00.000Z"
+    }
+  ],
+  "createdAt": "2026-08-01T12:00:00.000Z",
+  "updatedAt": "2026-08-01T12:00:00.000Z"
+}
