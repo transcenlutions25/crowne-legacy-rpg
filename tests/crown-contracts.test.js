@@ -188,3 +188,21 @@ test('original v1 ledger rewards without mission metadata cannot pay again throu
   assert.equal(result.snapshot.wallet.balance,50);
   assert.equal(result.snapshot.ledger.length,1);
 });
+
+test('snapshot validation is total over malformed JSON at every fixture field', () => {
+  const original = network();
+  const paths = [];
+  function visit(value, parent = []) {
+    for (const key of Object.keys(value)) {
+      const path = [...parent,key]; paths.push(path);
+      if (value[key] && typeof value[key] === 'object') visit(value[key],path);
+    }
+  }
+  visit(original);
+  for (const path of paths) for (const value of [null,{},[],{toString:null},false,'bad',5]) {
+    const candidate = structuredClone(original); let target = candidate;
+    for (const key of path.slice(0,-1)) target = target[key];
+    target[path.at(-1)] = value;
+    assert.doesNotThrow(() => validateCrownNetworkSnapshot(candidate),path.join('.'));
+  }
+});

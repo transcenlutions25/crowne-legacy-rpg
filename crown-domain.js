@@ -40,7 +40,7 @@ export function validateDomainRecords(snapshot, errors) {
       for (const [field, targets] of Object.entries(references)) {
         if (field in schema && !targets.has(record[field])) errors.push(`${path}.${field} references a missing record.`);
       }
-      if (key === 'worldClocks' && record.value > record.limit) errors.push(`${path}.value exceeds limit.`);
+      if (key === 'worldClocks' && integer(record.value) && integer(record.limit) && record.value > record.limit) errors.push(`${path}.value exceeds limit.`);
       if (key === 'scheduledEvents' && Array.isArray(record.consequenceIds) && record.consequenceIds.some(id => !consequences.has(id))) errors.push(`${path} references a missing consequence.`);
     });
   }
