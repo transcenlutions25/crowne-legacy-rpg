@@ -169,7 +169,7 @@ export function createCrownNetworkSnapshot({
   };
 
   const validation = validateCrownNetworkSnapshot(snapshot);
-  if (!validation.valid) throw new Error(`Invalid Crown Network snapshot: ${validation.errors.join(" ")}`);
+  if (!validation.valid) throw new Error(`Invalid Crowne Network snapshot: ${validation.errors.join(" ")}`);
   return snapshot;
 }
 
@@ -356,7 +356,7 @@ export function applyLedgerTransaction(inputSnapshot, {
   snapshot.updatedAt = at;
 
   const finalValidation = validateCrownNetworkSnapshot(snapshot);
-  if (!finalValidation.valid) throw new Error(`Transaction violated Crown Network integrity: ${finalValidation.errors.join(" ")}`);
+  if (!finalValidation.valid) throw new Error(`Transaction violated Crowne Network integrity: ${finalValidation.errors.join(" ")}`);
   return { snapshot, receipt, applied: true, reason: "applied" };
 }
 
@@ -411,7 +411,7 @@ export function migrateLegacyGameState(legacyState, {
     id: identifier("ledger"),
     idempotencyKey: `migration:${player.id}:${legacyState.version ?? "unknown"}`,
     type: "migration-opening-balance",
-    description: "Verified Crowne Legacy Mobile balance migrated into the Crown Network.",
+    description: "Verified Crowne Legacy Mobile balance migrated into the Crowne Network.",
     amount: walletBalance,
     balanceAfter: walletBalance,
     sourceClient,
