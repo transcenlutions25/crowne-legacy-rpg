@@ -50,6 +50,24 @@ function requireInteger(value, label) {
   return number;
 }
 
+function isLegacyV3Archive(candidate) {
+  if (!isRecord(candidate) || candidate.version !== 3) return false;
+  for (const field of ["campaign", "mode", "activeCharacter", "rosterScope", "sceneId", "stage"]) {
+    if (!isText(candidate[field])) return false;
+  }
+  if (!isRecord(candidate.stats) || !isRecord(candidate.funds) || !isRecord(candidate.flags) || !isRecord(candidate.world)) return false;
+  for (const field of ["level", "hp", "maxHp", "ac", "xp", "nextLevelXp", "wallet", "pendingReward", "totalEarned", "reserve", "inspector"]) {
+    if (!isInteger(candidate.stats[field])) return false;
+  }
+  for (const field of ["operations", "residents"]) if (!isInteger(candidate.funds[field])) return false;
+  for (const field of ["evidence", "legacyDecisions", "history", "ledger"]) if (!Array.isArray(candidate[field])) return false;
+  if (!candidate.evidence.every(isText)) return false;
+  if (typeof candidate.paymentClaimed !== "boolean" || typeof candidate.fundsAllocated !== "boolean") return false;
+  if (!isTimestamp(candidate.startedAt) || !isTimestamp(candidate.updatedAt)) return false;
+  if (candidate.completedAt !== null && !isTimestamp(candidate.completedAt)) return false;
+  return true;
+}
+
 export function createPlayerIdentity({
   playerId = identifier("player"),
   displayName = "Player",
@@ -252,11 +270,24 @@ export function validateCrownNetworkSnapshot(candidate) {
     if (duplicates.length) errors.push(`Duplicate ${key} IDs: ${duplicates.join(", ")}.`);
   }
   if (duplicateValues(candidate.ledger, record => record?.idempotencyKey).length) errors.push("Duplicate ledger idempotency keys.");
+  const receiptsByLedgerEntryId = new Map();
+  for (const receipt of Array.isArray(candidate.actionReceipts) ? candidate.actionReceipts : []) {
+    if (!isText(receipt?.ledgerEntryId)) continue;
+    const matches = receiptsByLedgerEntryId.get(receipt.ledgerEntryId) || [];
+    matches.push(receipt);
+    receiptsByLedgerEntryId.set(receipt.ledgerEntryId, matches);
+  }
   for (const entry of Array.isArray(candidate.ledger) ? candidate.ledger : []) {
     if (!isRecord(entry)) continue;
     if (!["id", "idempotencyKey", "type", "description", "sourceClient"].every(key => isText(entry[key])) || !isTimestamp(entry.occurredAt) || !isRecord(entry.metadata)) errors.push("Ledger audit fields are invalid.");
-    const receipts = Array.isArray(candidate.actionReceipts) ? candidate.actionReceipts.filter(r => r?.ledgerEntryId === entry.id) : [];
-    if (receipts.length !== 1 || receipts[0]?.idempotencyKey !== entry.idempotencyKey || receipts[0]?.sourceClient !== entry.sourceClient) errors.push("Ledger entry must have exactly one matching receipt.");
+    const receipts = receiptsByLedgerEntryId.get(entry.id) || [];
+    const matchingReceipt = receipts[0];
+    if (
+      receipts.length !== 1 ||
+      matchingReceipt?.idempotencyKey !== entry.idempotencyKey ||
+      matchingReceipt?.sourceClient !== entry.sourceClient ||
+      !["applied", "accepted"].includes(matchingReceipt?.status)
+    ) errors.push("Ledger entry must have exactly one successful matching receipt.");
   }
   for (const receipt of Array.isArray(candidate.actionReceipts) ? candidate.actionReceipts : []) {
     if (!isRecord(receipt)) continue;
@@ -334,7 +365,7 @@ export function migrateLegacyGameState(legacyState, {
   displayName = "Local Player",
   sourceClient = "crowne-legacy-mobile"
 } = {}) {
-  if (!isRecord(legacyState) || legacyState.version !== 3) throw new Error("A legacy game state is required.");
+  if (!isLegacyV3Archive(legacyState)) throw new Error("A complete version-3 legacy game state is required.");
 
   const characterId = String(legacyState.activeCharacter || "Tay Crowne")
     .toLowerCase()
@@ -422,6 +453,6 @@ export function restoreLegacyGameState(snapshot) {
   const validation = validateCrownNetworkSnapshot(snapshot);
   if (!validation.valid) throw new Error(`Invalid snapshot: ${validation.errors.join(" ")}`);
   const archive = snapshot.characters.find(character => character.id === snapshot.player.activeCharacterId)?.state?.legacySave;
-  if (!isRecord(archive) || archive.version !== 3) throw new Error("This snapshot has no complete version-3 mobile save archive.");
+  if (!isLegacyV3Archive(archive)) throw new Error("This snapshot has no complete version-3 mobile save archive.");
   return clone(archive);
 }
