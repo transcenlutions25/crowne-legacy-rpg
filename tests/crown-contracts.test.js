@@ -66,6 +66,10 @@ test('migration round trips the entire v3 checkpoint, including unknown additive
   restored.stats.hp = 1;
   assert.equal(migrated.characters[0].state.legacySave.stats.hp, 8);
   assert.throws(() => migrateLegacyGameState({...save,version:4}), /legacy game state/);
+  assert.throws(() => migrateLegacyGameState({version:3}), /complete version-3/);
+  const incompleteArchive = structuredClone(migrated);
+  incompleteArchive.characters[0].state.legacySave = {version:3};
+  assert.throws(() => restoreLegacyGameState(incompleteArchive), /no complete version-3/);
 });
 
 test('paid mobile saves retain payment protection after migration and archive restore', () => {
@@ -145,7 +149,14 @@ test('consequences are authority-resolved, immutable by replay and ordered witho
 
 test('ledger receipt links and primitive transaction key reuse detect tampering', () => {
   const result = processCrownCommand(network(),command(),options);
-  for (const mutate of [s=>s.actionReceipts[0].idempotencyKey='wrong',s=>s.actionReceipts=[],s=>s.ledger.push(structuredClone(s.ledger[0])),s=>s.actionReceipts[0].revision='1']) {
+  for (const mutate of [
+    s=>s.actionReceipts[0].idempotencyKey='wrong',
+    s=>s.actionReceipts=[],
+    s=>s.ledger.push(structuredClone(s.ledger[0])),
+    s=>s.actionReceipts[0].revision='1',
+    s=>s.actionReceipts[0].status='rejected',
+    s=>s.actionReceipts[0].status='conflict'
+  ]) {
     const candidate=structuredClone(result.snapshot); mutate(candidate);
     assert.equal(validateCrownNetworkSnapshot(candidate).valid,false);
   }
