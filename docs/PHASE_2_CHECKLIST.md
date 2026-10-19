@@ -1,8 +1,8 @@
-# Phase 2 Checklist — Crown Network
+# Phase 2 Checklist — Crowne Network
 
 ## Item 1: Shared contract foundation
 
-- [x] Define a versioned Crown Network snapshot.
+- [x] Define a versioned Crowne Network snapshot.
 - [x] Define stable player and character identity records.
 - [x] Define an integer wallet and append-only ledger.
 - [x] Define idempotent cross-game action receipts.
