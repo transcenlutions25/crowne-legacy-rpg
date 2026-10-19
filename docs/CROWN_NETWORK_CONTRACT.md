@@ -1,6 +1,6 @@
-# Crown Network Contract v1
+# Crowne Network Contract v1
 
-The Crown Network is the shared source-of-truth contract for Crowne Legacy Mobile and the future 3D open-world game. Neither client owns the economy or permanent world state. Both clients produce actions, and the backend accepts or rejects those actions against this contract.
+The Crowne Network is the shared source-of-truth contract for Crowne Legacy Mobile and the future 3D open-world game. Neither client owns the economy or permanent world state. Both clients produce actions, and the backend accepts or rejects those actions against this contract.
 
 ## Core records
 
