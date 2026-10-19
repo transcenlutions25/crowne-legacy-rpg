@@ -1,0 +1,66 @@
+{
+  "version": 3,
+  "campaign": "Crowne Legacy: The Blackout Contract",
+  "mode": "checkpoint",
+  "activeCharacter": "Tay Crowne",
+  "rosterScope": "chapter-subset",
+  "sceneId": "c9",
+  "stage": "worksite",
+  "stats": {
+    "level": 1,
+    "hp": 8,
+    "maxHp": 10,
+    "ac": 14,
+    "xp": 50,
+    "nextLevelXp": 300,
+    "wallet": 0,
+    "pendingReward": 50,
+    "totalEarned": 0,
+    "reserve": 9,
+    "inspector": 16
+  },
+  "funds": {
+    "operations": 0,
+    "residents": 0
+  },
+  "evidence": [
+    "cobalt-pulse",
+    "outbound-handshake",
+    "c9-map",
+    "duplicated-credential",
+    "early-notice",
+    "bridge-loan"
+  ],
+  "flags": {
+    "contractAccepted": true,
+    "cleanTerms": true,
+    "relayMapped": true,
+    "evidenceSuite": true,
+    "exportLogged": true
+  },
+  "world": {
+    "communityTrust": 0,
+    "marketTrust": 0,
+    "niaTrust": 0,
+    "civicTrust": 0,
+    "evidenceStrength": 0,
+    "politicalHeat": 0,
+    "autonomy": 0,
+    "residentSafety": 0,
+    "integrity": 0
+  },
+  "legacyDecisions": [],
+  "paymentClaimed": false,
+  "fundsAllocated": false,
+  "history": [],
+  "ledger": [
+    {
+      "at": "2026-08-01T12:00:00.000Z",
+      "type": "campaign",
+      "text": "Questforge checkpoint loaded at expansion port C-9."
+    }
+  ],
+  "startedAt": "2026-08-01T12:00:00.000Z",
+  "updatedAt": "2026-08-01T12:00:00.000Z",
+  "completedAt": null
+}

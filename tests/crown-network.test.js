@@ -10,7 +10,7 @@ import {
   validateCrownNetworkSnapshot
 } from "../crown-network.js";
 
-test("Crown Network snapshot includes every shared-world core record", () => {
+test("Crowne Network snapshot includes every shared-world core record", () => {
   const snapshot = createCrownNetworkSnapshot();
   for (const key of CROWN_NETWORK_RECORDS) assert.ok(key in snapshot, `missing ${key}`);
   assert.equal(snapshot.player.activeCharacterId, "tay-crowne");

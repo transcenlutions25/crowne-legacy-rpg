@@ -7,7 +7,7 @@ const viewport = { width: 412, height: 915 };
 
 await mkdir(artifactsDir, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, ...(process.env.CROWNE_CHROMIUM_PATH ? { executablePath: process.env.CROWNE_CHROMIUM_PATH } : {}) });
 const context = await browser.newContext({
   viewport,
   deviceScaleFactor: 2.625,
@@ -118,6 +118,23 @@ try {
   assert(pageErrors.length === 0, `Page errors: ${pageErrors.join(" | ")}`);
   assert(failedRequests.length === 0, `Failed requests: ${failedRequests.join(" | ")}`);
 
+  // Exercise the unchanged installed shell and v3 autosave while disconnected.
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true }));
+  });
+  const savedBefore = await page.evaluate(() => localStorage.getItem('crowne-legacy.blackout-contract.save.v3'));
+  assert(savedBefore, "The checkpoint must autosave before offline reload");
+  await context.setOffline(true);
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('button[data-action="resume"]').click();
+  await page.locator('.story-panel').waitFor({ state: 'visible' });
+  const savedAfter = await page.evaluate(() => localStorage.getItem('crowne-legacy.blackout-contract.save.v3'));
+  assert(savedBefore === savedAfter, "Offline resume changed saved progress");
+  report.screens.offlineResume = await layoutSnapshot("offline resume");
+  await page.screenshot({ path: `${artifactsDir}/offline-resume-412x915.png`, fullPage: false });
+  assert(pageErrors.length === 0, `Offline page errors: ${pageErrors.join(" | ")}`);
+  report.offlineResume = 'passed';
   report.status = "passed";
 } catch (error) {
   report.status = "failed";

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "fixture-mobile-command",
+  "idempotencyKey": "fixture-mobile-reward",
+  "playerId": "local-player",
+  "characterId": "tay-crowne",
+  "snapshotId": "fixture-snapshot",
+  "sourceClient": "crowne-legacy-mobile",
+  "expectedRevision": 0,
+  "issuedAt": "2026-08-01T12:00:00.000Z",
+  "type": "mission.claim-reward",
+  "payload": {
+    "missionId": "blackout-contract"
+  }
+}

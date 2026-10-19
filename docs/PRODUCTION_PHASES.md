@@ -16,7 +16,7 @@ Exit criteria:
 - The repository contains no duplicate or conflicting game implementations.
 - The baseline is tagged as version `v0.1.0` after final verification.
 
-## Phase 2: Define the Crown Network
+## Phase 2: Define the Crowne Network
 
 Goal: create the shared data contract that both Crowne Legacy Mobile and the future main game will use.
 
@@ -45,7 +45,7 @@ Goal: expand the mobile game into a standalone management and narrative game wit
 
 ## Phase 5: Main Game Integration Gateway
 
-Goal: expose a controlled API and game-state bridge for the future 3D open-world game. The main game will read and write the same Crown Network records instead of maintaining a separate economy or save universe.
+Goal: expose a controlled API and game-state bridge for the future 3D open-world game. The main game will read and write the same Crowne Network records instead of maintaining a separate economy or save universe.
 
 ## Phase 6: Advanced Cross-Game Play
 
