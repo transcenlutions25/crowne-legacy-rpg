@@ -38,4 +38,4 @@ This package is a polished playable vertical slice. A full commercial AAA mobile
 
 ## Next release gates
 
-See [the first sellable Android chapter plan](docs/FIRST_PLAYABLE_RELEASE.md) for the bounded review, canon, device, recovery and commercial-readiness gates. The Crown Network contract remains separate from the running offline chapter.
+See [the first sellable Android chapter plan](docs/FIRST_PLAYABLE_RELEASE.md) for the bounded review, canon, device, recovery and commercial-readiness gates. The Crowne Network contract remains separate from the running offline chapter.
